@@ -1,0 +1,5 @@
+Dataset: Twitter Sentiment analysis and visualization by  Asmita Poddar and Sonali Agrawal. Accessed : 10 June 2021, Available at: https://github.com/Twitter-Sentiment-Analysis/R/blob/master/positive-words.txt​
+
+R Tutorial and Code: Sentiment Analysis in R by Edureka. Accessed on 10 June 2021, Available at: https://youtu.be/-JW6_kcHDj4​
+
+R code was adopted from the video tutorial mentioned above however Keys for twitter are from my personal account.

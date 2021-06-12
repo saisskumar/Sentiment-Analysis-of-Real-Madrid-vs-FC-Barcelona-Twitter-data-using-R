@@ -1,0 +1,113 @@
+install.packages("twitteR")
+install.packages("ROAuth")
+install.packages("stringr")
+install.packages("RCurl")
+install.packages("dplyr")
+install.packages("string")
+install.packages(c("devtools", "rjson", "bit64", "httr"))
+install.packages("openssl")
+install.packages("httpuv")
+install.packages("tibble")
+install.packages("tidyverse")
+install.packages("scales")
+
+library(tidyverse)
+library(tibble)
+library(twitteR)
+library(purrr)
+library(plyr)
+library(dplyr)
+require('ROAuth')
+require('httr')
+require('RCurl')
+require('curl')
+library(stringr)
+library(openssl)
+library(httpuv)
+
+###Step 1 - Load the positive and negative words
+
+pos.words = scan('C:/users/Jamu/Documents/R/Sentiment analysis/positive.txt', what='character',comment.char=';')
+neg.words = scan('C:/users/Jamu/Documents/R/Sentiment analysis/negative.txt',what='character',comment.char=';')
+
+#Step 2 - Connecting to twitter:
+
+consumerKey <- "xLbgIY1nYArfzsc04CQrFxi6z"
+reqURL <- "https://api.twitter.com/oauth/request_token"
+accessURL <- "https://api.twitter.com/oauth/access_token"
+authURL <- "https://api.twitter.com/oauth/authorize"
+consumerSecret <- "HZCuh1eWjyG33nAnXKGSQcHkdbFuIFig6IE1j3ROs5RasvzZSU"
+accessToken <- "823574898253697024-nwvp2IS0QSgazKKBsBQtCDCCntL02mv"
+accessTokenSecret <- "dtZndo8MaHG51XVI66x9H6tgHTfHt6JOGHtQ3tGy7Gsal"
+
+twitCred <- OAuthFactory$new(consumerKey=consumerKey,
+                             consumerSecret=consumerSecret,
+                             requestURL=reqURL,accessURL=accessURL,
+                             authURL=authURL)
+
+#Setting up the twitter connection
+setup_twitter_oauth(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+
+
+#Step 3 - Running the algorithm
+
+score.sentiment <- function(sentences, pos.words, neg.words, .progress='none')
+{
+  require(plyr)
+  require(string)
+  scores <- laply(sentences, function(sentence, pos.words, neg.words) {
+    sentence <- gsub('[[:punct:]]',"", sentence)
+    sentence <- gsub('[[:cntrl:]]',"", sentence)
+    sentence <- gsub('\\d+', "", sentence)
+    sentence <- tolower(sentence)
+    word.list <- str_split(sentence, '\\s+')
+    words <- unlist(word.list)
+    pos.matches <- match(words, pos.words)
+    neg.matches <- match(words, neg.words)
+    pos.matches <- !is.na(pos.matches)
+    neg.matches <- !is.na (neg.matches)
+    score <- sum(pos.matches)- sum(neg.matches)
+    return(score)
+  }, pos.words, neg.words, .progress=.progress)
+  scores.df <- data.frame(score=scores, text=sentences)
+  return(scores.df)
+}
+
+
+#Step 4 - Streaming Real Madrid and Barcalona Tweets
+tweet1 <- userTimeline('@barcalona',n=100)
+tweet2 <- userTimeline('@realmadriden',n=100)
+
+
+#Step 6 - Converting them to DF
+tweet_df <- tbl_df(map_df(tweet1, as.data.frame))
+tweet2_df <- tbl_df(map_df(tweet2, as.data.frame))
+
+
+#Step 7 - Checking the tweets
+tweet_df$text
+tweet2_df$text
+
+
+#Step 8 - Getting the Score
+
+bscore <- score.sentiment(tweet_df$text,pos.words,neg.words,.progress='text')
+rscore <- score.sentiment(tweet2_df$text,pos.words,neg.words,.progress='text')
+
+
+#Step 9 - Plotting
+hist(rscore$score)
+hist(bscore$score)
+
+
+
+
+
+
+
+(consumer) API Key:  	418FYTb7KWsBB5OQsF1hd6WLg	
+(consumer) API Secret Key: 5GpqYwHjhROl38mWtFASXuxAw99L7Z5vd3pnb1TA7i0J4adhv9
+bearer token AAAAAAAAAAAAAAAAAAAAAGAwQgEAAAAAh4xLj8YIkuqfQ%2F5jwDrEMErfvYk%3DGoo6S4XocTofzmINfD2xRULZNfZPqx0Vz0f3OoRMrBIz3tGz2e
+
+Access token: 823574898253697024-cYCjVLS08jPHDsNMrQDztkSM5JEvLNC
+Access token secret: 0VnfCIHoGhdHHA9IFBT8d9catfKixHo5o5iI8uTbvlbGw
