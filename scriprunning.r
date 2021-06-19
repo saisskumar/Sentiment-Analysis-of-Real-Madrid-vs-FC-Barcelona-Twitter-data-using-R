@@ -1,3 +1,6 @@
+## I have removed the secret key due to privacy concerns. Kindly drop an email to Sai-Santhi-Sree-Kumar.Medicherla@hsrw.org for the keys.
+
+
 install.packages("twitteR")
 install.packages("ROAuth")
 install.packages("stringr")
@@ -27,18 +30,18 @@ library(httpuv)
 
 ###Step 1 - Load the positive and negative words
 
-pos.words = scan('C:/users/Jamu/Documents/R/Sentiment analysis/positive.txt', what='character',comment.char=';')
-neg.words = scan('C:/users/Jamu/Documents/R/Sentiment analysis/negative.txt',what='character',comment.char=';')
+pos.words = scan('C:/users/**/R/Sentiment analysis/positive.txt', what='character',comment.char=';')
+neg.words = scan('C:/users/**/Documents/R/Sentiment analysis/negative.txt',what='character',comment.char=';')
 
 #Step 2 - Connecting to twitter:
 
-consumerKey <- "xLbgIY1nYArfzsc04CQrFxi6z"
+consumerKey <- ""
 reqURL <- "https://api.twitter.com/oauth/request_token"
 accessURL <- "https://api.twitter.com/oauth/access_token"
 authURL <- "https://api.twitter.com/oauth/authorize"
-consumerSecret <- "HZCuh1eWjyG33nAnXKGSQcHkdbFuIFig6IE1j3ROs5RasvzZSU"
-accessToken <- "823574898253697024-nwvp2IS0QSgazKKBsBQtCDCCntL02mv"
-accessTokenSecret <- "dtZndo8MaHG51XVI66x9H6tgHTfHt6JOGHtQ3tGy7Gsal"
+consumerSecret <- ""
+accessToken <- ""
+accessTokenSecret <- ""
 
 twitCred <- OAuthFactory$new(consumerKey=consumerKey,
                              consumerSecret=consumerSecret,
